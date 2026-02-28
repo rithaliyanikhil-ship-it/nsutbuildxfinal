@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProctorAI - Intelligent Exam Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070913;
+            --text-light: #f8fafc;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Glow Decorators */
+        .glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            filter: blur(200px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .glow.purple {
+            background: var(--accent-purple);
+            top: 10%;
+            right: 5%;
+        }
+
+        .glow.bottom {
+            top: 70%;
+            left: 5%;
+            width: 500px;
+            height: 500px;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 5%;
+            background: rgba(7, 9, 19, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+            border: 1px solid var(--accent-purple);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--text-light), var(--accent-cyan));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #d1d5db;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8rem 5% 5rem;
+            min-height: 100vh;
+            gap: 3rem;
+            position: relative;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+            z-index: 10;
+        }
+
+        .tagline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: var(--accent-cyan);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #ffffff;
+        }
+
+        .hero-title span {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.125rem;
+            color: #a1a1aa;
+            margin-bottom: 2.5rem;
+            max-width: 90%;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 60%);
+            z-index: -1;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.2);
+            animation: float 6s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 5%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-subtitle {
+            color: var(--accent-purple);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(6, 182, 212, 0.1);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .icon-container {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--accent-cyan);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .icon-container {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: white;
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+            border-color: transparent;
+        }
+
+        .feature-card h3 {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: #a1a1aa;
+            font-size: 1rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 5%;
+            display: flex;
+            justify-content: center;
+            gap: 5rem;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #a1a1aa;
+        }
+
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 8rem;
+            }
+
+            .hero-title {
+                font-size: 3.2rem;
+            }
+
+            .hero-desc {
+                margin: 0 auto 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .tagline {
+                margin: 0 auto 1.5rem;
+            }
+
+            .stats {
+                gap: 3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ambient Decorators -->
+    <div class="glow purple"></div>
+    <div class="glow bottom"></div>
+
+    <nav>
+        <div class="logo-container">
+            <!-- Ensure images have paths pointing to the copied assets -->
+            <img src="exam_logo_1772208634325.png" alt="ProctorAI Logo" class="logo-img">
+            <div class="logo-text">ProctorAI</div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#platform">Platform</a></li>
+            <li><a href="#solutions">Solutions</a></li>
+            <li><a href="#security">Security Core</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <a href="signup.html" class="btn btn-outline" style="border-color:transparent;">Sign In</a>
+            <a href="signup.html" class="btn btn-primary">Request Demo</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="tagline">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Next-Gen Secure Proctoring
+            </div>
+            <h1 class="hero-title">Academic Integrity, Powered By <span>AI Intelligence</span></h1>
+            <p class="hero-desc">Conduct secure, seamless, and cheat-proof exams globally. Our automated platform uses
+                advanced neural networks and behavior analysis to maintain the uncompromised standard of modern
+                education.</p>
+            <div class="nav-buttons" style="justify-content: flex-start;">
+                <a href="signup.html" class="btn btn-primary"
+                    style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 12px;">Start Free Trial</a>
+                <a href="#" class="btn btn-outline"
+                    style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 12px;">View Features</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="hero_graphic_1772209126957.png" alt="AI Proctoring Illustration">
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Uptime Reliability</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">5M+</div>
+            <div class="stat-label">Exams Proctored</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">&lt;1s</div>
+            <div class="stat-label">Threat Detection</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">200+</div>
+            <div class="stat-label">Institutions Trusted</div>
+        </div>
+    </section>
+
+    <section class="features" id="solutions">
+        <div class="section-header">
+            <span class="section-subtitle">Core Capabilities</span>
+            <h2 class="section-title">Intelligent Defense Systems</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-container">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5z"></path>
+                        <path d="M9 13v-1"></path>
+                        <path d="M15 13v-1"></path>
+                        <path d="M12 17v.01"></path>
+                        <path d="M12 7v.01"></path>
+                    </svg>
+                </div>
+                <h3>Facial Recognition & Tracking</h3>
+                <p>Advanced biometrics instantly verify identity, ensuring the registered student remains present while
+                    flagging unauthorized multiple faces.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-container">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+                <h3>Secure Browser Lockdown</h3>
+                <p>An impenetrable testing environment that restricts tabs, disables shortcuts, and prevents screen
+                    sharing or malicious applications.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="icon-container">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" x2="12" y1="19" y2="22"></line>
+                    </svg>
+                </div>
+                <h3>Object & Audio Detection</h3>
+                <p>Continuous environmental monitoring AI that detects unauthorized devices, background voices, and
+                    suspicious audio anomalies instantly.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">ProctorAI &copy; 2026. All rights reserved.</div>
+        <div class="footer-links">
+            <a href="#" style="color:#a1a1aa; text-decoration:none; margin-left: 1rem;">Privacy Policy</a>
+            <a href="#" style="color:#a1a1aa; text-decoration:none; margin-left: 1rem;">Terms of Service</a>
+        </div>
+    </footer>
+</body>
+
+</html>

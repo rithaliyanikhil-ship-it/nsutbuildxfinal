@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - ProctorAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070913;
+            --text-light: #f8fafc;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ambient Glow Decorators */
+        .glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            filter: blur(250px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .glow.purple {
+            background: var(--accent-purple);
+            top: -10%;
+            right: -10%;
+        }
+
+        .glow.cyan-bottom {
+            bottom: -20%;
+            left: -10%;
+        }
+
+        /* Nav Header (Minimal) */
+        .header {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 32px;
+            width: auto;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+            border: 1px solid var(--accent-purple);
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--text-light), var(--accent-cyan));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        /* Auth Card */
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .auth-subtitle {
+            color: #a1a1aa;
+            font-size: 0.95rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .form-input::placeholder {
+            color: #52525b;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            border: none;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-google {
+            background: #ffffff;
+            color: #1f2937;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-google:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #52525b;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .divider::before {
+            margin-right: 1em;
+        }
+
+        .divider::after {
+            margin-left: 1em;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #a1a1aa;
+        }
+
+        .auth-footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-footer a:hover {
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glow purple"></div>
+    <div class="glow cyan-bottom"></div>
+
+    <div class="header">
+        <a href="first.html" class="logo-container">
+            <img src="exam_logo_1772208634325.png" alt="ProctorAI Logo" class="logo-img">
+            <div class="logo-text">ProctorAI</div>
+        </a>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Get Started</h1>
+                <p class="auth-subtitle">Create a secure account for your exams</p>
+            </div>
+
+            <button type="button" class="btn btn-google" onclick="window.location.href='dashboard.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                        fill="#4285F4" />
+                    <path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853" />
+                    <path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        fill="#EA4335" />
+                    <path d="M1 1h22v22H1z" fill="none" />
+                </svg>
+                Continue with Google
+            </button>
+
+            <div class="divider">or</div>
+
+            <form action="dashboard.html" method="GET">
+                <div class="form-group">
+                    <label class="form-label" for="google_id">Google ID (Email)</label>
+                    <input type="email" id="google_id" class="form-input" placeholder="student@university.edu" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="#">Sign in</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

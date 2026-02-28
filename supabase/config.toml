@@ -1,0 +1,7 @@
+project_id = "rbnsulqvvbngoubchewf"
+
+[functions.analyze-proctoring]
+verify_jwt = false
+
+[functions.record-violation]
+verify_jwt = false
