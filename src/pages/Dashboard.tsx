@@ -242,8 +242,8 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </main >
-    </div >
+      </main>
+    </div>
   );
 };
 
