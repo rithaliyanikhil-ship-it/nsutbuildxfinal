@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Supabase anon/publishable keys are intentionally public (client-side)
+  # They are safe to include in the build output
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_PUBLISHABLE_KEY,VITE_SUPABASE_URL,VITE_SUPABASE_PROJECT_ID"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
