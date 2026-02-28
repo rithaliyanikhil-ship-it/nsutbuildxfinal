@@ -31,12 +31,14 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [exams, setExams] = useState<Exam[]>([]);
   const [sessions, setSessions] = useState<ExamSession[]>([]);
+  const userName = localStorage.getItem("userName") || "";
+  const userRollNo = localStorage.getItem("userRollNo") || "";
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!userName) {
       navigate("/auth");
     }
-  }, [user, authLoading, navigate]);
+  }, [userName, navigate]);
 
   useEffect(() => {
     if (!user) return;
@@ -53,8 +55,9 @@ const Dashboard = () => {
     fetchData();
   }, [user]);
 
-  const handleSignOut = async () => {
-    await signOut();
+  const handleSignOut = () => {
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userRollNo");
     navigate("/auth");
   };
 
@@ -96,11 +99,11 @@ const Dashboard = () => {
 
         <div className="user-profile">
           <div className="avatar">
-            {user?.email?.substring(0, 2).toUpperCase() || "JD"}
+            {userName.substring(0, 2).toUpperCase() || "JD"}
           </div>
           <div className="user-info">
-            <div className="user-name">{user?.email?.split('@')[0] || "User"}</div>
-            <div className="user-role">Student Account</div>
+            <div className="user-name">{userName}</div>
+            <div className="user-role">{userRollNo}</div>
           </div>
           <button onClick={handleSignOut} className="logout-btn" title="Sign Out">
             <LogOut size={20} className="nav-icon" />
@@ -118,7 +121,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className="main-content">
         <div className="top-bar">
-          <h1 className="page-title">Welcome back, {user?.email?.split('@')[0] || "there"} 👋</h1>
+          <h1 className="page-title">Welcome back, {userName} 👋</h1>
           <div className="top-actions">
             <button className="notification-btn">
               <Bell size={24} />
