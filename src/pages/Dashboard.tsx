@@ -136,38 +136,28 @@ const Dashboard = () => {
             <div className="card">
               <div className="card-header">
                 <h2 className="card-title">Available Assessments</h2>
-                <button className="btn-sm" onClick={() => navigate("/create-exam")}>+ New Exam</button>
               </div>
 
               <div className="exam-list">
-                {exams.length === 0 ? (
-                  <div className="empty-state">
-                    <FileText size={48} />
-                    <p>No assessments currently available.</p>
-                  </div>
-                ) : (
-                  exams.filter(e => e.status === "published").map((exam) => (
-                    <div key={exam.id} className="exam-item">
-                      <div className="exam-details">
-                        <div className="exam-date">
-                          <span className="month">Oct</span>
-                          <span className="day">{new Date(exam.created_at).getDate()}</span>
-                        </div>
-                        <div className="exam-info">
-                          <h4>{exam.title}</h4>
-                          <p>
-                            <span>Duration: {exam.duration_minutes} mins</span>
-                            <span className="dot-divider">•</span>
-                            <span className="status status-ready">
-                              <CheckCircle size={12} /> Ready
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                      <Link to={`/exam/${exam.id}`} className="btn-start">Start Exam</Link>
+                <div className="exam-item">
+                  <div className="exam-details">
+                    <div className="exam-date">
+                      <span className="month">Feb</span>
+                      <span className="day">28</span>
                     </div>
-                  ))
-                )}
+                    <div className="exam-info">
+                      <h4>Proctored Assessment</h4>
+                      <p>
+                        <span>AI-Proctored Exam</span>
+                        <span className="dot-divider">•</span>
+                        <span className="status status-ready">
+                          <CheckCircle size={12} /> Ready
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <a href="/exam.html" className="btn-start">Start Exam</a>
+                </div>
               </div>
             </div>
 
@@ -252,8 +242,8 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 
